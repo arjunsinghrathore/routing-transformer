@@ -1939,7 +1939,7 @@ GENERATE_EVERY  = 500
 GENERATE_LENGTH = 20000
 SEQ_LENGTH = 4096
 save_model = True
-load_model = True
+load_model = False
 
 def save_checkpoint(state,epoch):
     print("=> Saving checkpoint")
@@ -1948,9 +1948,12 @@ def save_checkpoint(state,epoch):
     t.save(state, filename)
 
 
-def load_checkpoint_transformer(checkpoint, model, optimizer):
+def load_checkpoint_transformer(checkpoint, model):
     print("=> Loading checkpoint")
     model.load_state_dict(checkpoint["state_dict"])
+    
+def load_optimizer_transformer(checkpoint,optimizer):
+    print("=> Loading optimizer")
     optimizer.load_state_dict(checkpoint["optimizer"])
 
 model = RoutingTransformerLM(
@@ -1969,11 +1972,14 @@ model.cuda()
 # # optimizer
 # optim = t.optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
+if load_model:
+    load_checkpoint_transformer(t.load("./drive/MyDrive/audio_VAE/Routing_checkpoint_2/checkpoint_500.pth.tar"), model)
+    
 cmd_args = add_argument()
 model_engine, optimizer, trainloader, _ = deepspeed.initialize(args=cmd_args, model=model, model_parameters=model.parameters(),  training_data=dataset_reload)
 
 if load_model:
-    load_checkpoint_transformer(t.load("./drive/MyDrive/audio_VAE/Routing_checkpoint_2/checkpoint_500.pth.tar"), model_engine, optimizer)
+    load_optimizer_transformer(t.load("./drive/MyDrive/audio_VAE/Routing_checkpoint_2/checkpoint_500.pth.tar"),optimizer)
 
 # training
  
@@ -2040,7 +2046,7 @@ for epoch in range(NUM_BATCHES):
         if(i % 500 == 0):
           if save_model:
             checkpoint = {
-              "state_dict": model_engine.state_dict(),
+              "state_dict": model.state_dict(),
               "optimizer": optimizer.state_dict(),
               }
             save_checkpoint(checkpoint,i)
@@ -2048,7 +2054,7 @@ for epoch in range(NUM_BATCHES):
  
     if save_model:
           checkpoint = {
-            "state_dict": model_engine.state_dict(),
+            "state_dict": model.state_dict(),
             "optimizer": optimizer.state_dict(),
             }
           save_checkpoint(checkpoint,i)
