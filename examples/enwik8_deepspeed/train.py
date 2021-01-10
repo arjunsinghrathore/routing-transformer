@@ -2022,7 +2022,7 @@ for epoch in range(NUM_BATCHES):
           # y = x_data[:,start+1:start+1+SEQ_LENGTH]
           # loss = model(x, return_loss = True)
           # loss.backward()
-
+          data = x 
           data = data.to(model_engine.local_rank)
           loss = model_engine(data, return_loss = True)
           loss_total += loss.item()
@@ -2033,7 +2033,7 @@ for epoch in range(NUM_BATCHES):
           start += 10
           count += 1
         
-        if(i % 10 == 0): 
+        if(i % 50 == 0): 
           print(f'\nloss : {loss.item()} :: epoch : {epoch}')
           print(f'training loss: {loss_total/(count)} :: epoch : {epoch}')
  
