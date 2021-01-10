@@ -1939,7 +1939,7 @@ GENERATE_EVERY  = 500
 GENERATE_LENGTH = 20000
 SEQ_LENGTH = 4096
 save_model = True
-load_model = False
+load_model = True
 
 def save_checkpoint(state,epoch):
     print("=> Saving checkpoint")
@@ -1973,7 +1973,7 @@ cmd_args = add_argument()
 model_engine, optimizer, trainloader, _ = deepspeed.initialize(args=cmd_args, model=model, model_parameters=model.parameters(),  training_data=dataset_reload)
 
 if load_model:
-    load_checkpoint_transformer(t.load("./drive/MyDrive/audio_VAE/Routing_checkpoint_2/checkpoint_700.pth.tar"), model_engine, optimizer)
+    load_checkpoint_transformer(t.load("./drive/MyDrive/audio_VAE/Routing_checkpoint_2/checkpoint_500.pth.tar"), model_engine, optimizer)
 
 # training
  
