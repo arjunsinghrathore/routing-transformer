@@ -9,13 +9,6 @@ Original file is located at
 ## **Initialization**
 """
 
-!pip install better_exceptions
-!pip install av
-!pip install soundfile
-!pip install deepspeed
-!pip install mpi4py
-!pip install routing_transformer
-
 import argparse
 import numpy       as np
 import tensorflow as tf
